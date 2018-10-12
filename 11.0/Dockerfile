@@ -28,11 +28,11 @@ RUN set -x; \
         && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/
 
 # Install Odoo
-ENV ODOO_VERSION 12.0
-ENV ODOO_RELEASE 20181008
+ENV ODOO_VERSION 11.0
+ENV ODOO_RELEASE 20180808
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo 'caedca66b655268f2f0fb8d2661593dabbf46b88 odoo.deb' | sha1sum -c - \
+        && echo 'a48d588b76fd642ac9e1af63a38e4d87ee20531a odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -44,14 +44,15 @@ COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
 COPY ./odooce.conf /etc/odoo/
 
-RUN chown odoo /etc/odoo/*
-COPY odoo-12e.zip /tmp
-RUN  unzip /tmp/odoo-12e.zip -d /opt/odoo/ \
+RUN chown odoo /etc/odoo/odoo.conf
+COPY odoo-11e.zip /tmp
+RUN  unzip /tmp/odoo-11e.zip -d /opt/odoo/ \
 	 && rm -f /tmp/*
 
 
-
 # Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
+RUN mkdir -p /mnt/extra-addons \
+        && chown -R odoo /mnt/extra-addons
 VOLUME ["/var/lib/odoo"]
 
 # Expose Odoo services
@@ -59,6 +60,7 @@ EXPOSE 8069
 
 # Set the default config file
 ENV ODOO_RC /etc/odoo/odoo.conf
+
 
 # Set default user when running the container
 USER odoo
