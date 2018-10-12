@@ -22,9 +22,11 @@ DESCARGAMOS LA IMAGEN
 docker pull odooxmarts:latest
 
 
-CREAMOS EL CONTENEDOR
+CREAMOS EL CONTENEDOR ENETERPRICE
+
 docker run --link db --name odoo12 -e POSTGRES_USER=odoo -e POSTGRES_HOST=localhost  -e CREATEUSER=no -d   -p 8066:8069 viernes/odooxmarts:12.0.4
 
 CRRAMOS CONTENDOR CE 
+
 docker run --link db --name odoo12 -e POSTGRES_USER=odoo -e POSTGRES_HOST=localhost  -e CREATEUSER=no -e ODOO_RC=/etc/odoo/odooce.conf -d   -p 8066:8069 viernes/odooxmarts:12.0.4
 
